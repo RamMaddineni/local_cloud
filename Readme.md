@@ -9,7 +9,8 @@ This repository provides a self-hosted deployment system that supports Linux env
 3. Containerized web application using Docker and Docker Compose
 4. Continuous deployment system
 5. Secure configuration with proper firewall settings
-6. A scalable foundation to add databases, analytics, or other services
+6. Public access support via ngrok
+7. A scalable foundation to add databases, analytics, or other services
 
 ## Prerequisites
 
@@ -97,9 +98,44 @@ If you prefer to deploy manually without the continuous deployment:
 
 ## Accessing the Application
 
+### Local Access
 Once deployed, the application will be available at:
 - http://localhost (Port 80)
 - https://localhost (Port 443)
+
+### Public Access (Using ngrok)
+To make your application accessible from anywhere on the internet:
+
+1. Sign up for a free account at https://ngrok.com/signup
+
+2. Install ngrok in WSL/Linux:
+   ```bash
+   # Add ngrok repository
+   curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
+   echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
+   
+   # Install ngrok
+   sudo apt update
+   sudo apt install ngrok
+   ```
+
+3. Get your authtoken from https://dashboard.ngrok.com/get-started/setup and configure it:
+   ```bash
+   ngrok config add-authtoken YOUR_AUTH_TOKEN
+   ```
+
+4. Start ngrok to expose your application:
+   ```bash
+   ngrok http 80
+   ```
+
+5. You'll get a public URL (e.g., `https://abc123.ngrok.io`) that you can share with anyone.
+
+Important Notes about ngrok:
+- Keep the ngrok terminal window open while sharing
+- The URL changes each time you restart ngrok (free tier)
+- Perfect for development, testing, and temporary sharing
+- For permanent public access, consider buying a domain and proper hosting
 
 ## Adding Custom Domain
 
@@ -121,6 +157,12 @@ To use a custom domain:
 - Check system logs: `sudo journalctl -u docker`
 - Check deployment logs: `tail -f /var/log/local_cloud_deploy.log`
 - Verify services are running: `sudo systemctl status docker`
+
+### ngrok Issues:
+- If ngrok shows "connection refused", ensure your Docker containers are running
+- Check ngrok status: `ngrok status`
+- Verify your authtoken: `ngrok config check`
+- For tunneling issues, try: `ngrok http 80 --log=stdout`
 
 ## Contributing
 
