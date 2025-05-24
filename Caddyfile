@@ -1,0 +1,3 @@
+yourdomain.com {
+  reverse_proxy local_cloud_app:8080
+} 
