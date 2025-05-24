@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /home/$(whoami)/Desktop/repos/local_cloud
+cd "$(dirname "$(dirname "$(dirname "$0")")")"
 git pull
 docker-compose build
 docker-compose up -d 
