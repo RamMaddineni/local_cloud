@@ -142,7 +142,7 @@ Important Notes about ngrok:
 To use a custom domain:
 1. Update the Caddyfile with your domain name
 2. Ensure your DNS records point to your server
-3. Redeploy the application.
+3. Redeploy the application
 
 ## Troubleshooting
 
